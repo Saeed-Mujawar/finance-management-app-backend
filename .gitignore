@@ -1,0 +1,21 @@
+# Python-related files
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment variables
+.env
+
+# Database files
+financeApp.db
+
+# IDE or editor folders
+.vscode/
+.idea/
+*.swp
+
+# Other potential files to ignore
+*.log
+
+# Exclude environment-specific folders and files
+env/
