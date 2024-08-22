@@ -9,8 +9,14 @@ load_dotenv()
 SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Create async engine
-engine = create_async_engine(SQLALCHEMY_DATABASE_URL, echo=True)
-
+engine = create_async_engine(
+    SQLALCHEMY_DATABASE_URL, 
+    echo=True,
+    pool_size=1,                # Minimum number of connections in the pool
+    max_overflow=0,             # Maximum number of connections above `pool_size`
+    pool_pre_ping=True,         # Enable pre-ping to check the connection's validity before using
+    pool_recycle=1800           # Recycle connections every 30 minutes (or as needed)
+)
 # Create async sessionmaker
 AsyncSessionLocal = async_sessionmaker(
     bind=engine,
