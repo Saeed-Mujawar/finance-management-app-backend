@@ -21,3 +21,11 @@ class LoginResponse(BaseModel):
 class OTPVerificationRequest(BaseModel):
     temp_user_id: str
     otp: str
+
+class ResetPasswordRequest(BaseModel):
+    new_password: str 
+    otp: str 
+    temp_user_id: str 
+
+class ForgotPasswordRequest(BaseModel):
+    email: str

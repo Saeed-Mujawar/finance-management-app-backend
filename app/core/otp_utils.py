@@ -4,6 +4,8 @@ from email.mime.text import MIMEText
 from email.utils import formataddr
 import asyncio
 
+temporary_user_store = {}
+
 def generate_otp(length=6):
     import random
     import string
@@ -12,11 +14,11 @@ def generate_otp(length=6):
 async def send_otp_email(to_email, otp):
     # Sender email and name
     sender_email = 'saeedmujawar2000@gmail.com'
-    sender_name = 'Finance App OTP'
+    sender_name = 'Finance App Verification'
     
     # Email subject and content
-    subject = 'Your OTP for Finance App Signup'
-    content = f'Your OTP for Finance App signup is: {otp}'
+    subject = 'Your OTP from Finance App'
+    content = f'Your OTP from Finance App is: {otp}'
     
     # Create MIME email object
     msg = MIMEMultipart()

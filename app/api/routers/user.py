@@ -20,7 +20,7 @@ async def get_users(
 ):
     return await userRepo.get_users(db)
 
-@router.put("/{user_id}", response_model=transaction.ShowUser)
+@router.put("/{user_id}")
 async def update_user(
     user_id: int,
     user: userSchema.UserUpdate,

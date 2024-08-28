@@ -5,7 +5,8 @@ from app.core.database import get_db
 from app.models.user import User
 from app.models.transaction import Transaction
 from app.api.schemas import user
-
+from app.core.otp_utils import generate_otp, send_otp_email, temporary_user_store
+import uuid
 
 
 async def get_users(db: AsyncSession = Depends(get_db)):
@@ -39,13 +40,32 @@ async def update_user(user_id: int, user: user.UserUpdate, db: AsyncSession = De
             existing_user = await session.execute(select(User).filter(User.email == user.email))
             if existing_user.scalars().first():
                 raise HTTPException(status_code=400, detail="Email already in use")
+            
+            otp = generate_otp()
+            temp_user_id = str(uuid.uuid4())
+            temporary_user_store[temp_user_id] = {
+                "user_id": user_id,
+                "user_name": user.username,
+                "new_email": user.email,
+                "otp": otp,
+                "type": "email_update"
+            }
+            await send_otp_email(user.email, otp)
+
+            return {"message": "OTP sent to your email. Please verify.", "temp_user_id": temp_user_id}
+            
+        
 
         for key, value in user.dict().items():
             setattr(db_user, key, value)
         await session.commit()
         await session.refresh(db_user)
         
-        return db_user
+        return {
+            "username": db_user.username,
+            "email": db_user.email
+        }
+
     
 async def delete_user_by_id(user_id: int, db: AsyncSession = Depends(get_db)):
     async with db as session:
