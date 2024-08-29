@@ -73,12 +73,13 @@ async def verify_otp(data: authentication.OTPVerificationRequest, db: AsyncSessi
                 raise HTTPException(status_code=404, detail="User not found")
 
             user.email = temp_user_data["new_email"]
+            user.username = temp_user_data["user_name"]
             session.add(user)
             await session.commit()
             await session.refresh(user)
 
             del temporary_user_store[data.temp_user_id]
-            return {"message": "Email updated successfully"}
+            return {"message": "Successfully updated"}
 
         elif temp_user_data["type"] == "signup":
             user = temp_user_data["user_data"]
